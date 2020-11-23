@@ -1,7 +1,13 @@
 # prutor-lang:python
 import math
 import numpy as np
-
+"""
+INPUT FORMAT
+2
+[1 2; 3 4]
+L
+5
+"""
 
 n=int(input())
 A=input()
@@ -25,8 +31,8 @@ arr = np.array(arrL)
 
 # Input Converted Into proper Matrix
 
-z0 = np.zeros(shape=(n,n))
-z0[0][0] = 1
+z0 = np.zeros(shape=(n))
+z0[0] = 1
 # Initial Vector z0 is assumed for Power Method
 
 # Finding largest eigen value using Power Method
@@ -34,9 +40,9 @@ if ( choice == "L" ) :
     z1 = np.dot(arr,z0)
     max = 0
     for i in range(n) :
-        if( max <= abs(z1[i][0]) ) :
-            max = abs(z1[i][0]) 
-            eg1 = z1[i][0]
+        if( max <= abs(z1[i]) ) :
+            max = abs(z1[i]) 
+            eg1 = z1[i]
     
     z1 = z1/eg1
 
@@ -44,9 +50,9 @@ if ( choice == "L" ) :
         z2 = np.dot(arr, z1)
         max = 0
         for i in range(n) :
-            if( max <= abs(z2[i][0]) ) :
-                 max = abs(z2[i][0]) 
-                 eg2 = z2[i][0]
+            if( max <= abs(z2[i]) ) :
+                 max = abs(z2[i]) 
+                 eg2 = z2[i]
         z2 = z2/eg2
         
         error = (abs(eg2 - eg1) / abs(eg2) ) *100 
@@ -55,39 +61,46 @@ if ( choice == "L" ) :
             break
         z1 = z2
         eg1 = eg2
-    print("Largest Eigen Vector using Power Methord:", eg2)
+    print("Largest Eigen Value using Power Methord:", eg2)
+    print("Largest Eigen Vector using Power Methord:", z2)
 
 # Finding smallest eigen value using Inverse Power Method    
 if ( choice == "L" ) :
-    arrInv = np.linalg.inv(arr)
-
-    z1 = np.dot(arrInv,z0)
-
-    max = 0
-    for i in range(n) :
-        if( max <= abs(z1[i][0]) ) :
-            max = abs(z1[i][0]) 
-            eg1 = z1[i][0]
+    if(np.linalg.det(arr) == 0) :
+        print("Smallest Eigenvalue is : 0 (Singular Matrix)")
     
-    z1 = z1/eg1
+    else : 
+    
+        arrInv = np.linalg.inv(arr)
+    
+        z1 = np.dot(arrInv,z0)
 
-    for k in range(100) :
-        z2 = np.dot(arrInv, z1)
         max = 0
         for i in range(n) :
-            if( max <= abs(z2[i][0]) ) :
-                 max = abs(z2[i][0]) 
-                 eg2 = z2[i][0]
-        z2 = z2/eg2
+            if( max <= abs(z1[i]) ) :
+                max = abs(z1[i]) 
+                eg1 = z1[i]
         
-        error = (abs(eg2 - eg1) / abs(eg2) ) * 100 
-        
-        if (error <= tolerance) :
-            break
-        z1 = z2
-        eg1 = eg2
+        z1 = z1/eg1
 
-    print("Smalest Eigen Vector using Power Method:" , 1/eg2)
+        for k in range(100) :
+            z2 = np.dot(arrInv, z1)
+            max = 0
+            for i in range(n) :
+                if( max <= abs(z2[i]) ) :
+                    max = abs(z2[i]) 
+                    eg2 = z2[i]
+            z2 = z2/eg2
+        
+            error = (abs(eg2 - eg1) / abs(eg2) ) * 100 
+        
+            if (error <= tolerance) :
+                break
+            z1 = z2
+            eg1 = eg2
+
+        print("Smallest Eigen Value using the Inverse Power Method:" , 1/eg2)
+        print("Smallest Eigen Vector using the Inverse Power Method:", z2)
      
      
 # Function for QR Decomposition by Gram-Schmidt algorithm
